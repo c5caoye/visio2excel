@@ -4,5 +4,5 @@ Has application been (and remains) withdrawn to within 30 days of study period s
 Has application received GTL communication with 30 day withdrawal notice already?
 Does application have OSG remaining issued (or to be issued)?
 Has application been reassessed and become overpaid in OSG since last GTL communication?
-Is current date greater than study period end date
+Is current date > than study period end date
 Is application not considered verified from GTL perpective or is application overpaid in OSG?

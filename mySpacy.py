@@ -16,9 +16,10 @@ def parse(sentence):
 
 def isProperQuestion(n):
     '''Helper function, determine whether the sentence can be converted or not '''
-    # if not n[1] == 'aux' and not n[1] == 'ROOT':
     if not n[1] in ['aux', 'ROOT', 'conj']:
-      return False
+        return False
+    elif n[0] in ['to']:
+        return False
     else: return True
 
 
@@ -82,8 +83,9 @@ def handleCC(parseList, indicator):
     ci = 0
     for phrase in myBin:
         if not isProperQuestion(phrase[0]):
-            result += skipSentence(listToString(phrase), indicator)
-        result += listToString(moveAux(phrase, indicator))
+            result += listToString(phrase)
+        else:
+            result += listToString(moveAux(phrase, indicator))
         if ci < len(ccBin):
             result+=ccBin[ci][0] + " "
             ci += 1
@@ -117,8 +119,25 @@ def toStatement(sentence, indicator):
 
     # Remove puncts
     for token in parseList:
-        if token[1].lower() == "punct":
-            parseList.remove(token)
+        needReParse = False
+        if token[1].lower() in ['punct', 'dep']: # ('greater', 'amod', 'ADJ')
+            if token[0].lower() == ">":
+                a = parseList.index(token)
+                parseList[a] = ('greater', 'amod', 'ADJ')
+                needReParse = True
+            elif token[0].lower() == "<":
+                a = parseList.index(token)
+                parseList[a] =  ('less', 'amod', 'ADJ')
+                needReParse = True
+            elif token[0].lower() == "=":
+                a = parseList.index(token)
+                parseList[a] = ('equal', 'amod', 'ADJ')
+                needReParse = True
+            else:
+                parseList.remove(token)
+        if needReParse:
+            redoc = listToString(parseList)
+            parseList = parse(redoc)
 
     # Handel sentences using 'or' and 'and'
     cc = handleCC(parseList, indicator)
