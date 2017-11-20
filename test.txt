@@ -6,3 +6,5 @@ Does application have OSG remaining issued (or to be issued)?
 Has application been reassessed and become overpaid in OSG since last GTL communication?
 Is current date > than study period end date
 Is application not considered verified from GTL perpective or is application overpaid in OSG?
+Grant To Loan Warning Communication Not Required
+Is this the first installment containing OSG?
