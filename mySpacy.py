@@ -17,7 +17,6 @@ def parse(sentence):
 
 def isProperQuestion(n):
     '''Helper function, determine whether the sentence can be converted or not '''
-    # if not n[0].lower() in QUESTIONMARKS: return False
     return n[0].lower() in QUESTIONMARKS
 
 
@@ -148,6 +147,7 @@ def listToString(parseList):
     result = ""
     for t in parseList:    result += t[0] + " "
     return result
+    
 
 if __name__  == '__main__':
     print("==================================================")

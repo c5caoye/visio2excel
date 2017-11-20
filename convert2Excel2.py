@@ -31,12 +31,14 @@ def process_input(textPool):
 def main():
     Tkinter.Tk().withdraw()
     path = tkFileDialog.askopenfilename()
+
     rawTextPool = open_file(path)
     if f == None:
         return
     else:
         textPool = process_input(rawTextPool)
         print("File successfully opened.")
+
     print("Creating a new excel file")
     myExcel = xlsxwriter.Workbook(path + '.xlsx')
     worksheet = myExcel.add_worksheet()
@@ -46,24 +48,25 @@ def main():
     for pool in textPool:
         print("Writing Scenatrio " + row + "......")
         worksheet.write(row, 0, row)
+
+        textToWrite = ""
         for line in pool:
-            textToWrite = ""
             svalue = ""
             if re.search("Yes >", line):
                 value = line.split("Yes >", 1)
-                print(value)
                 svalue = ms.toStatement(value, "yes")
-                print(svalue)
+                print(value, svalue) # Debug
             elif re.search("No >", line):
                 value = line.split("No >", 1)
                 svalue = ms.toStatement(value, "no")
-                print(svalue)
+                print(value, svalue) # Debug
             textToWrite += svalue + '\n'
         worksheet.write(row, 1, textToWrite, wrap)
         row += 1
+
     myExcel.close()
     print("Finish writing excel file")
     temp = raw_input("Prees any key to exit")
     return
 
-    if __name__ == '__main__': main()
+if __name__ == '__main__': main()
