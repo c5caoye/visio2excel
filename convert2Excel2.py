@@ -1,8 +1,9 @@
-import xlswriter
+import xlsxwriter
 import codecs
-import Tkinter, tkFileDialog
+import tkinter as Tkinter
 import re
 import mySpacy as ms
+from tkinter import filedialog as tkFileDialog
 
 def open_file(path):
     ''' Open file and process as a list if path exists. Return None otherwise '''
@@ -24,16 +25,18 @@ def process_input(textPool):
     for line in textPool:
         if line[0] == "1" and not line[1].isdigit():
             newPool.append(curPool)
+            curPool = []
         curPool.append(line)
     newPool.append(curPool)
     return newPool
 
 def main():
+    print("Hello...")
     Tkinter.Tk().withdraw()
     path = tkFileDialog.askopenfilename()
 
     rawTextPool = open_file(path)
-    if f == None:
+    if rawTextPool == None:
         return
     else:
         textPool = process_input(rawTextPool)
@@ -42,31 +45,36 @@ def main():
     print("Creating a new excel file")
     myExcel = xlsxwriter.Workbook(path + '.xlsx')
     worksheet = myExcel.add_worksheet()
+    worksheet.set_column(1, 1, 100)
     wrap = myExcel.add_format({'text_wrap': True})
 
     row = 0
     for pool in textPool:
-        print("Writing Scenatrio " + row + "......")
+        print("Writing Scenatrio " + str(row) + "......")
         worksheet.write(row, 0, row)
-
         textToWrite = ""
-        for line in pool:
-            svalue = ""
-            if re.search("Yes >", line):
-                value = line.split("Yes >", 1)
-                svalue = ms.toStatement(value, "yes")
-                print(value, svalue) # Debug
-            elif re.search("No >", line):
-                value = line.split("No >", 1)
-                svalue = ms.toStatement(value, "no")
-                print(value, svalue) # Debug
-            textToWrite += svalue + '\n'
+
+        for i in range(len(pool)):
+            pool[i] = re.sub('\d*\.', '', pool[i])
+            pool[i] = re.sub('Yes > ', '', pool[i])
+            pool[i] = re.sub('No > ', '', pool[i])
+            if i+1 < len(pool):
+                if re.search('Yes >', pool[i+1]):
+                    pstate = ms.toStatement(pool[i], 'yes')
+                    textToWrite += pstate + '\n'
+                elif re.search('No >', pool[i+1]):
+                    nstate = ms.toStatement(pool[i], 'no')
+                    textToWrite += nstate + '\n'
+                else:
+                    textToWrite += pool[i] + '\n'
+            else: textToWrite += pool[i] + '\n'
         worksheet.write(row, 1, textToWrite, wrap)
         row += 1
 
+
     myExcel.close()
     print("Finish writing excel file")
-    temp = raw_input("Prees any key to exit")
+    temp = input("Prees any key to exit")
     return
 
 if __name__ == '__main__': main()
