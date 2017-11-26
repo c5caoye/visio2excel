@@ -1,4 +1,3 @@
-import codecs
 import spacy
 nlp = spacy.load("en")
 
@@ -147,11 +146,11 @@ def listToString(parseList):
     result = ""
     for t in parseList:    result += t[0] + " "
     return result
-    
+
 
 if __name__  == '__main__':
     print("==================================================")
-    f = codecs.open("test.txt", 'r', 'latin-1')
+    f = open("test.txt", 'r')
     for line in f:
       if not line == "":
         print("==================================================")

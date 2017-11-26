@@ -1,5 +1,4 @@
 import xlsxwriter
-import codecs
 import tkinter as Tkinter
 import re
 import mySpacy as ms
@@ -8,7 +7,8 @@ from tkinter import filedialog as tkFileDialog
 def open_file(path):
     ''' Open file and process as a list if path exists. Return None otherwise '''
     try:
-        f = codecs.open(path, 'r', 'latin-1')
+        # f = codecs.open(path, 'r', 'latin-1')
+        f = open(path, 'r')
         textPool = []
         for line in f:
             if line[0].isdigit():
